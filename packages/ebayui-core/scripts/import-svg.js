@@ -88,7 +88,10 @@ function setupDir(fileName) {
     const example = getExamples(fileName);
     cp.execSync(`rm -rf ${JSON.stringify(outputDir)}`);
     cp.execSync(`rm -rf ${JSON.stringify(example)}`);
-    fs.mkdirSync(outputDir);
+    if (fileName !== "image-placeholder") {
+        fs.mkdirSync(outputDir);
+    }
+    fs.mkdirSync(path.dirname(example), { recursive: true });
     fs.writeFileSync(
         example,
         `class {}
@@ -175,51 +178,57 @@ function generateFile(type, iconMap) {
         const markoTag = path.join(iconFolder, "marko-tag.json");
         const index = path.join(iconFolder, "index.marko");
 
-        if (!fs.existsSync(iconFolder)) fs.mkdirSync(iconFolder);
-        const filePath = path.join(iconFolder, "symbol.ts");
-        const content = `export function symbol() {
-    // eslint-disable-next-line max-len,quotes
-    return ${JSON.stringify(themes)};
-};`;
+        const size = name.match(sizeMatcher)?.[1] || "";
+        const themesStr = JSON.stringify(themes);
+        const defStr = iconDef ? JSON.stringify(iconDef) : null;
 
-        fs.writeFileSync(filePath, `${content.trim()}\n`);
-
-        if (iconDef) {
-            const defPath = path.join(iconFolder, "def.ts");
-            const contentDef = `export function def() {
-    // eslint-disable-next-line max-len,quotes
-    return { server:  ${JSON.stringify(iconDef.server)}, browser: ${JSON.stringify(iconDef.browser)} };
-};
-`;
-
-            fs.writeFileSync(defPath, `${contentDef.trim()}\n`);
+        if (type === "image-placeholder") {
+            // Inline themes in root index.marko (same pattern as other icons, no icons subfolder)
+            const imagePlaceholderRoot = path.join(
+                outputBaseDir,
+                "ebay-image-placeholder",
+                "index.marko",
+            );
+            fs.writeFileSync(
+                imagePlaceholderRoot,
+                `import type { Input as IconInput } from "<ebay-icon>";
+export type Input = Omit<IconInput, \`_\${string}\`>;
+$ const themes = ${themesStr};
+<ebay-icon
+    ...input
+    _name="image-placeholder"
+    _type="image-placeholder"
+    _themes=themes/>
+`,
+            );
+            continue;
         }
+
+        if (!fs.existsSync(iconFolder)) fs.mkdirSync(iconFolder);
 
         fs.writeFileSync(
             markoTag,
             `${JSON.stringify(markoTagJson, null, 2)}\n`,
         );
 
-        if (type === "image-placeholder") {
-            // don't write index for image placeholder
-            continue;
-        }
-
-        const size = name.match(sizeMatcher)?.[1] || "";
-
-        fs.writeFileSync(
-            index,
-            `import { symbol } from "./symbol";
-${iconDef ? 'import { def } from "./def"' : ""}
-import type { Input as IconInput } from "../../${
-                type === "icon" ? "" : "../ebay-icon/"
-            }component-browser"
+        const indexContent = iconDef
+            ? `import type { Input as IconInput } from "../../${
+                  type === "icon" ? "" : "../ebay-icon/"
+              }component-browser"
 export type Input = Omit<IconInput, \`_\${string}\`>;
-<ebay-icon ...input _name="${name}" _size="${size}" _type="${type}" _themes=symbol${
-                iconDef ? " _def=def" : ""
-            }/>
-`,
-        );
+$ const themes = ${themesStr};
+$ const def = ${defStr};
+<ebay-icon ...input _name="${name}" _size="${size}" _type="${type}" _themes=themes _def=def/>
+`
+            : `import type { Input as IconInput } from "../../${
+                  type === "icon" ? "" : "../ebay-icon/"
+              }component-browser"
+export type Input = Omit<IconInput, \`_\${string}\`>;
+$ const themes = ${themesStr};
+<ebay-icon ...input _name="${name}" _size="${size}" _type="${type}" _themes=themes/>
+`;
+
+        fs.writeFileSync(index, indexContent);
     }
 }
 

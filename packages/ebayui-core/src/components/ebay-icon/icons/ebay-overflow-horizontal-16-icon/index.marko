@@ -1,9 +1,9 @@
-import { symbol } from "./symbol";
 import type { Input as IconInput } from "../../component-browser";
 export type Input = Omit<IconInput, `_${string}`>;
+$ const themes = '<symbol viewbox="0 0 16 16" id=icon-overflow-horizontal-16><path d="M11.5 8a1.5 1.5 0 1 0 3 0 1.5 1.5 0 0 0-3 0Zm-10 0a1.5 1.5 0 1 0 3 0 1.5 1.5 0 0 0-3 0ZM8 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Z"></path></symbol>';
 <ebay-icon
     ...input
     _name="overflow-horizontal-16"
     _size="16"
     _type="icon"
-    _themes=symbol/>
+    _themes=themes/>

@@ -1,11 +1,23 @@
-import { symbol } from "./symbol";
-import { def } from "./def";
 import type { Input as IconInput } from "../../../ebay-icon/component-browser";
 export type Input = Omit<IconInput, `_${string}`>;
+$ const themes = '<symbol viewbox="0 0 64 48" fill=none id=flag-es-ct><g clip-path=url(#clip0_704_43618)><path d="M0 0H64V48H0V0Z" fill=#FCDD09></path><path d="M0 8H63.9997H0ZM63.9997 18.6667H0H63.9997ZM0 29.3334H63.9997H0ZM63.9997 40H0H63.9997Z" fill=black></path><path d="M0 8H63.9997M63.9997 18.6667H0M0 29.3334H63.9997M63.9997 40H0" stroke=#DA121A stroke-width=5.02831></path></g><defs><clippath id=clip0_704_43618><rect width=64 height=48 fill=white></rect></clippath></defs></symbol>';
+$ const def = {
+    browser: {
+        children: [
+            {
+                name: "rect",
+                attr: { width: "64", height: "48", fill: "white" },
+            },
+        ],
+        name: "clipPath",
+        attr: { id: "clip0_704_43618" },
+    },
+    server: "<clippath id=clip0_704_43618><rect width=64 height=48 fill=white></rect></clippath>",
+};
 <ebay-icon
     ...input
     _name="flag-es-ct"
     _size=""
     _type="flag"
-    _themes=symbol
+    _themes=themes
     _def=def/>

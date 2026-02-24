@@ -58,9 +58,9 @@ $ var prefixSvg = _type === "icon" ? "icon-" : "";
     <if(renderDefs && themes)>
         <defs key="defs">
             <if(!isBrowser)>
-                $!{themes()}
+                $!{themes}
                 <if(_def)>
-                    $!{_def().server}
+                    $!{_def.server}
                 </if>
             </if>
         </defs>

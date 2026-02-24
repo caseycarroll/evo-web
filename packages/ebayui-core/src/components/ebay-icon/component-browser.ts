@@ -10,11 +10,11 @@ interface IconDefs {
 }
 
 interface IconInput extends Omit<Marko.Input<"svg">, `on${string}`> {
-    _themes?: () => string;
+    _themes?: string;
     _type: string;
     _name: string;
     _size?: string;
-    _def?: () => IconDefs;
+    _def?: IconDefs;
     "a11y-variant"?: "label";
     "a11y-text"?: Marko.HTMLAttributes["aria-label"];
     "no-skin-classes"?: boolean;
@@ -75,10 +75,10 @@ class Icon extends Marko.Component<Input> {
         if (defs) {
             let defItem;
             if (this.input && this.input._themes) {
-                defs.innerHTML = this.input._themes();
+                defs.innerHTML = this.input._themes;
             }
             if (this.input && this.input._def) {
-                defItem = createSVGElementFromString(this.input._def().browser);
+                defItem = createSVGElementFromString(this.input._def.browser);
             }
 
             const symbol = defs.querySelector("symbol");

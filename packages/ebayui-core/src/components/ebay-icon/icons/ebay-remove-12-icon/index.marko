@@ -1,4 +1,4 @@
-import { symbol } from "./symbol";
 import type { Input as IconInput } from "../../component-browser";
 export type Input = Omit<IconInput, `_${string}`>;
-<ebay-icon ...input _name="remove-12" _size="12" _type="icon" _themes=symbol/>
+$ const themes = '<symbol viewbox="0 0 12 12" id=icon-remove-12><path fill-rule=evenodd clip-rule=evenodd d="M1 6a.75.75 0 0 1 .75-.75h8.5a.75.75 0 0 1 0 1.5h-8.5A.75.75 0 0 1 1 6Z"></path></symbol>';
+<ebay-icon ...input _name="remove-12" _size="12" _type="icon" _themes=themes/>
